@@ -1,7 +1,8 @@
-var express=require('express');
-var cityRouter =express.Router();
+var express = require('express');
+var cityRouter = express.Router();
 
-var city=[{
+var city = [
+    {
       "_id": 1,
       "city_name": "Delhi",
       "city": 1,
@@ -18,17 +19,40 @@ var city=[{
       "city_name": "Mumbai",
       "city": 2,
       "country_name": "India"
-    }]
+    },
+    {
+      "_id": 4,
+      "city_name": "Chandigarh",
+      "city": 4,
+      "country_name": "India"
+    },
+    {
+      "_id": 5,
+      "city_name": "Goa",
+      "city": 5,
+      "country_name": "India"
+    },
+    {
+      "_id": 6,
+      "city_name": "Manali",
+      "city": 6,
+      "country_name": "India"
+    }
+  ]
 
-
-    cityRouter.route('/')
-    .get((req,res) =>{
+function router(menu){
+  cityRouter.route('/')
+    .get((req,res) => {
       //res.send(city)
-      res.render('city',{title:'City Page'})
-    })
-    cityRouter.route('/details')
-    .get((req,res) =>{
-      res.send('city details')
+      res.render('city',{title:'City Page',menu:menu})
     })
 
-    module.exports= cityRouter
+  cityRouter.route('/details')
+    .get((req,res) => {
+      res.send("City details")
+    })
+
+  return cityRouter
+}
+
+module.exports = router
