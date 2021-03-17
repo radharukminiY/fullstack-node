@@ -1,9 +1,9 @@
 var express=require('express');
 var app= express();
-var port = 9600;
+var port = 9200;
 var menu=[
-  {link:'/',name:'Home'}
-  {link:'/hotel',name:'Hotels'}
+  {link:'/',name:'Home'},
+  {link:'/hotel',name:'Hotels'},
   {link:'/city',name:'City'}
 ]
 var hotelRouter = require('./controller/routes/hotelRouter');
