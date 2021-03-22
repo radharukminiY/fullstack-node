@@ -1,47 +1,38 @@
 var express = require('express');
-var hotelRouter = express.Router();
+var hotelRouter = express.Router()
 var mongodb = require('mongodb').MongoClient;
-var url = "mongodb://localhost:27017";
+var url = 'mongodb://localhost:27017';
 
 
 function router(menu){
-  hotelRouter.route('/')
-    .get((req,res) => {
-      //res.send(hotels)
-      mongodb.connect(url,(err,conn)=>{
-        if(err) {res.status(404).send('Error While connecting')}
-        else{
-          const dbo = conn.db('marchnode');
-          dbo.collection('hotels').find({}).toArray((err,data) =>{
-            if(err) {res.status(500).send('Error While Fetching')}
-            else{
-              res.render('hotels',{title:'Hotels Page',hotels:data,menu:menu});
-            }
-          })
-        }
-      })
+    hotelRouter.route('/')
+    .get(function(req,res){
+        mongodb.connect(url,function(err,connection){
+           useNewUrlParser: true;
+          if(err){
+            res.status(501).send('Error while connecting')
+          }else{
+            const dbo = connection.db('jannode');
+            dbo.collection('hotels').find({}).toArray(function(err,data){
+              if(err){
+                res.status(501).send('Error while Fetching')
+              }else{
+                res.render('hotels',{title:'Hotel Page',hoteldata:data,menu:menu})
+              }
+            })
+          }
+        })
+        //res.send(hotels)
 
-    })
+    });
 
-  hotelRouter.route('/details/:id')
-    .get((req,res) => {
-      // var id = req.params.id;
-      var {id} = req.params
-      mongodb.connect(url,(err,conn)=>{
-        if(err) {res.status(404).send('Error While connecting')}
-        else{
-          const dbo = conn.db('marchnode');
-          dbo.collection('hotels').find({_id:id}).toArray((err,data) =>{
-            if(err) {res.status(500).send('Error While Fetching')}
-            else{
-              res.render('hotelDetails',{title:'Hotels Page',hotels:data,menu:menu});
-            }
-          })
-        }
-      })
-    })
+    hotelRouter.route('/details')
+        .get(function(req,res){
+            res.send('Hotel Details')
+    });
 
-  return hotelRouter
+    return hotelRouter
 }
 
-module.exports = router
+
+module.exports = router;
