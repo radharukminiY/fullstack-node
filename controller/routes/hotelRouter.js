@@ -1,19 +1,18 @@
 var express = require('express');
 var hotelRouter = express.Router()
 var mongodb = require('mongodb').MongoClient;
-var url = 'mongodb+srv://adminradha:rukku558@cluster0.g5sih.mongodb.net/hoteldata?retryWrites=true&w=majority';
-var DATABASE_NAME = "hoteldata";
+var url = 'mongodb://localhost:27017';
+
 
 function router(menu){
     hotelRouter.route('/')
     .get(function(req,res){
-        mongodb.connect(url,function(err,connection){
-           useNewUrlParser: true;
+        mongodb.connect(url,{ useUnifiedTopology: true },function(err,connection){
           if(err){
             res.status(501).send('Error while connecting')
           }else{
-            const dbo = connection.db('nodefullsatack');
-            dbo.collection('hoteldata').find({}).toArray(function(err,data){
+            const dbo = connection.db('node');
+            dbo.collection('hotels').find({}).toArray(function(err,data){
               if(err){
                 res.status(501).send('Error while Fetching')
               }else{
