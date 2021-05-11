@@ -1,30 +1,42 @@
 var express = require('express');
 var app = express();
-var port = 9800;
-var menu =[
-    {link:'/',name:'Home'},
-    {link:'/hotel',name:'Hotels'},
-    {link:'/city',name:'City'}
+var port = process.env.PORT || 9002;
+var morgan = require('morgan');
+var chalk = require('chalk');
+var menu = [
+	{name:'Home', link:'/'},
+	{name:'Hotels', link:'/hotels'},
+	{name:'City', link:'/city'}
 ]
-var hotelRouter = require('./controller/routes/hotelRouter')(menu);
-var cityRouter = require('./controller/routes/cityRouter')(menu);
 
-//static file path
+var hotelRouter = require('./src/routes/hotelRouter')(menu);
+var cityRouter = require('./src/routes/cityRouter')(menu);
+
+//logging
+app.use(morgan('tiny'));
+
+//Static File path
 app.use(express.static(__dirname+'/public'))
-//html
-app.set('views', './views');
-// engine
-app.set('view engine','ejs');
+//HTML
+app.set('views', './src/views')
+//View Engine
+app.set('view engine', 'ejs');
 
-app.get('/',(req,res) => {
-    //res.send('<h1>Node Js</h1>')
-    res.render('index',{title:'Home Page',menu:menu})
+app.get('/health',function(req,res){
+    res.status(200).send('Health Check')
 });
 
-app.use('/hotel', hotelRouter)
-app.use('/city', cityRouter)
+app.get('/',function(req,res){
+    res.render('index',{menu})
+});
+
+app.use('/hotels',hotelRouter);
+app.use('/city',cityRouter)
+
 
 app.listen(port,function(err){
     if(err) throw err;
-    console.log(`Server is running on port ${port}`)
-});
+    else{
+        console.log(chalk.blue('Server is running on port '+port));
+    }
+})
